@@ -1,0 +1,118 @@
+			HOW TO CREATE 2D MAPEDITOR
+Schematics
+
+ 	|---------------------------------------------------------------|
+	|			WXFRAME					|
+	|								|
+	| |----------------------------------------|  |---------------| |
+	| |				           |  |	  HBOX1       |	|
+	| |					   |  |   HBOX2       |	|
+	| |                                        |  |   HBOX3       |	|
+	| |      	MAIN PANEL                 |  |               |	|
+	| |	        			   |  |  SEC. PANEL   |	|
+	| |			   		   |  | 	      |	|
+	| |				           |  |---------------| |
+	| |				           |  |	     	      |	|
+	| |					   |  |   WXLISTCTRL  | |
+	| |----------------------------------------|  |---------------| |
+	|		 	 					|
+	|								|
+	|			BORDER PANEL	                 	|
+	|---------------------------------------------------------------|
+
+Add Text:
+---------
+Add text to hbox1/2/3
+
+void GUI::addText()
+{
+	// TILE INFO
+	tile = new wxStaticText(secondPanel,wxID_ANY,"Tile: ",wxDefaultPosition,wxDefaultSize);
+	tile->SetFont(wxFont(10,wxFONTFAMILY_DEFAULT,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_BOLD,false));
+	hbox1->Add(tile,1,wxALL,5);
+	tileValue = new wxStaticText(secondPanel,wxID_ANY," 180",wxDefaultPosition,wxDefaultSize,0);
+	hbox1->Add(tileValue,0,wxALL,5);
+	vbox->Add(hbox1,0,wxEXPAND,0);
+	
+	// POSITION X
+	posX = new wxStaticText(secondPanel,wxID_ANY,"Pos X: ",wxDefaultPosition,wxDefaultSize);
+	posX->SetFont(wxFont(10,wxFONTFAMILY_DEFAULT,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_BOLD,false));
+	hbox2->Add(posX,1,wxALL,5);
+	posXValue = new wxStaticText(secondPanel,wxID_ANY,"90",wxDefaultPosition,wxDefaultSize);
+	hbox2->Add(posXValue,0,wxALL,5);
+	vbox->Add(hbox2,0,wxEXPAND,0);
+
+	//POSITION Y
+	posY = new wxStaticText(secondPanel,wxID_ANY,"Pos Y: ",wxDefaultPosition,wxDefaultSize);
+	hbox3->Add(posY,1,wxALL,5);
+	posY->SetFont(wxFont(10,wxFONTFAMILY_DEFAULT,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_BOLD,false));
+	posYValue = new wxStaticText(secondPanel,wxID_ANY,"160",wxDefaultPosition,wxDefaultSize);
+	hbox3->Add(posYValue,0,wxALL,5);
+	vbox->Add(hbox3,0,wxEXPAND,0);
+}
+
+Create MinimalList
+Create function createListCtrl	
+	img = wxBitmap("resources/levelgridless.png");
+	imgList = new wxImageList(32,32,true); 
+
+	wxBitmap rect01 = img.GetSubBitmap(wxRect(64,0,32,32));
+	imgList->Add(rect01); 
+
+	tileset  = new wxListCtrl(secondPanel,wxID_ANY,wxPoint(0,100),wxSize(300,600),wxLC_ICON);
+	tileset->SetImageList(imgList,wxIMAGE_LIST_NORMAL);
+	
+	tileset->InsertItem(0,0);
+	tileset->SetBackgroundColour(wxColour(wxT("#888888")));
+	vbox->Add(tileset,3,wxALL | wxEXPAND,4);	
+	
+and for our example:
+
+
+void GUI::createListCtrl()
+{
+	//Load File
+	img = wxBitmap("resources/levelgridless.png");
+	//Create list and set the size of icon
+	imgList = new wxImageList(32,32,true); 
+	
+	populateList(img);
+
+	tileset  = new wxListCtrl(secondPanel,wxID_ANY,wxPoint(0,100),wxSize(300,600),wxLC_ICON);
+	tileset->SetImageList(imgList,wxIMAGE_LIST_NORMAL);
+	
+	// Insert imagelist in listctrl
+	for (int i=0; i < nTile; i++)
+	{
+		tileset->InsertItem(0,i);
+		std::cout << i << std::endl;
+	}
+	 
+	// Set gray background
+	tileset->SetBackgroundColour(wxColour(wxT("#888888")));
+	vbox->Add(tileset,3,wxALL | wxEXPAND,4);	
+	
+}
+
+void GUI::populateList(wxBitmap& img)
+{
+	wxBitmap rect;
+	
+	// NTILELINE and NTILECOL determine how many tiles is present in
+	tileset to loop and get rect to add in imglist
+	nTileLine = img.GetSize().x / tileSize;
+	nTileCol = img.GetSize().y / tileSize;
+
+	// NTILE number of tile in entire tileset
+	nTile = nTileLine * nTileCol;
+	
+	for  (int y=0; y < nTileCol; y++)
+	{
+		for(int x=0; x < nTileLine;x++)
+		{
+			rect = img.GetSubBitmap(wxRect(x * tileSize,y * tileSize,tileSize,tileSize)); 
+			imgList->Add(rect);			
+		}
+	}
+
+}

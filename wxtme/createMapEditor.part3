@@ -1,0 +1,60 @@
+			HOW TO CREATE 2D MAPEDITOR
+Schematics
+
+ 	|---------------------------------------------------------------|
+	|			WXFRAME					|
+	|								|
+	| |----------------------------------------|  |---------------| |
+	| |				           |  |	  HBOX1       |	|
+	| |					   |  |   HBOX2       |	|
+	| |                                        |  |   HBOX3       |	|
+	| |      	MAIN PANEL                 |  |               |	|
+	| |	        			   |  |  SEC. PANEL   |	|
+	| |			   		   |  | 	      |	|
+	| |				           |  |---------------| |
+	| |				           |  |	     	      |	|
+	| |					   |  |   WXLISTCTRL  | |
+	| |----------------------------------------|  |---------------| |
+	|		 	 					|
+	|								|
+	|			BORDER PANEL	                 	|
+	|---------------------------------------------------------------|
+
+Add Panel and Elements:
+------------------------
+
+LAYOUT MANAGEMENT:
+ 	* we are going to create panel border to create Border around our main and secondary panel.
+	* we are going to create an hbox to create two panels MAINPANEL and SECONDARY PANEL.
+	* we are going to create hbox1 / hbox2 /hbox3 to show our staticText tile/posX/posY and tileValue/posXValue/posYValue
+	  and we are going to add our boxes on vbox to add a listctrl on bellow our static text
+	
+ * Create hbox / create border panel / main panel and second panel
+ -----------------------------------------------------------------
+
+	Add this to gui.hpp:
+
+		wxBoxSizer* hbox;
+		wxPanel *borderPanel;
+		wxPanel *mainPanel;
+		wxPanel *secondPanel;
+	
+ * Implement in the constructor GUI (file: gui.cpp) to organize panel
+ ---------------------------------------------------------------------
+
+	hbox = new wxBoxSizer(wxHORIZONTAL);	// MAINPANEL / SECOND PANEL 
+	borderPanel = new wxPanel(this,wxID_ANY);
+ 
+ * And create mainPanel and secondPanel in createGUI to avoid overload the contruction
+ --------------------------------------------------------------------------------------
+
+	mainPanel = new wxPanel(borderPanel,wxID_ANY,wxDefaultPosition,wxDefaultSize);
+	hbox->Add(mainPanel,3,wxEXPAND |wxALL ,10);
+	secondPanel = new wxPanel(borderPanel,wxID_ANY,wxDefaultPosition,wxDefaultSize);
+	hbox->Add(secondPanel,1,wxEXPAND|wxALL ,10);
+
+	secondPanel->SetSizer(vbox);
+	borderPanel->SetSizer(hbox);
+
+
+

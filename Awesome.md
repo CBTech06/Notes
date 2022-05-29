@@ -1,0 +1,3 @@
+# ---- [ AWESOME WM] ----
+
+    < [index.md]
